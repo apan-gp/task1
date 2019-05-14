@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
 
 
@@ -9,7 +9,7 @@ function Component(props) {
 
     return (
         <div className="search-box">
-            <input className="search-box__inputfield" type="text" ref={refOfInputField} />
+            <input className="search-box__input" type="text" ref={refOfInputField} />
             <button className="search-box__go-button" onClick={clickHandlerOfGo}>Go!</button>
         </div>
     );
@@ -29,7 +29,7 @@ function createGoClickHandler(inputField, dataHandler) {
 }
 
 Component.propTypes = {
-    onGo: PropTypes.func,
+    requestHandler: PropTypes.func,
 };
 
 export default Component;
