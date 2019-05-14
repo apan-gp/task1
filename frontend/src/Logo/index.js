@@ -1,16 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function Component(props) {
+function Logo(props) {
     return (
         <img className="logo" src={props.imgSrc} alt="" />
     );
 }
 
-Component.propTypes = {
-    posts: PropTypes.arrayOf(PropTypes.shape({
-        title: PropTypes.string.isRequired,
-    })),
+Logo.propTypes = {
+    imgSrc: PropTypes.string.isRequired,
 };
 
-export default Component;
+export default Logo;

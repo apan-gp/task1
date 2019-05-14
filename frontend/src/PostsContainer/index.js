@@ -4,7 +4,7 @@ import Search from 'Search';
 import AddPostButton from 'AddPostButton';
 import PostItem from 'PostItem';
 
-function Component(props) {
+function PostsContainer(props) {
     // Needed for optimization, when phrase is same as old.
     const [searchPhrase, setSearchPhrase] = useState('');
 
@@ -33,7 +33,7 @@ function Component(props) {
                     // Mixing title and ID, because have no idea if posts sent by endpoint always have different ID's
                     // (normally it would do it, but current REST endpoint might generate it dynamically, including
                     // ID's).
-                    : postsToDisplay.map(val => <PostItem postData={val} key={val.title + val.id} />)
+                    : postsToDisplay.map(val => <PostItem postData={val} key={`${val.title}${val.id}`} />)
                 }
             </main>
         </div>
@@ -47,11 +47,11 @@ function filterPosts(posts, phrase) {
     return posts.filter(elem => elem.title.includes(phrase) || elem.body.includes(phrase));
 }
 
-Component.propTypes = {
+PostsContainer.propTypes = {
     posts: PropTypes.arrayOf(PropTypes.shape({
         body: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,
     })),
 };
 
-export default Component;
+export default PostsContainer;
