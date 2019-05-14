@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function Component(props) {
+function PostItem(props) {
     return (
         <div className="post-item">
             <section>
@@ -16,11 +16,11 @@ function Component(props) {
     );
 }
 
-Component.propTypes = {
+PostItem.propTypes = {
     postData: PropTypes.shape({
         title: PropTypes.string.isRequired,
         body: PropTypes.string.isRequired,
     }).isRequired,
 };
 
-export default Component;
+export default PostItem;

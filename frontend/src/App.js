@@ -14,11 +14,11 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        fetch(config['data-endpoint'] + 'posts')
-        .then(response => response.json())
-        .then(data => {
-            this.setState({posts: data} );
-        });
+        fetch(`${config['data-endpoint']}posts`)
+            .then(response => response.json())
+            .then(posts => {
+                this.setState({ posts });
+            });
     }
 
     render() {

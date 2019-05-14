@@ -2,7 +2,7 @@ import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
 
 
-function Component(props) {
+function Search(props) {
     const refOfInputField = useRef(null);
 
     const clickHandlerOfGo = createGoClickHandler(refOfInputField, props.requestHandler);
@@ -28,8 +28,8 @@ function createGoClickHandler(inputField, dataHandler) {
     };
 }
 
-Component.propTypes = {
+Search.propTypes = {
     requestHandler: PropTypes.func,
 };
 
-export default Component;
+export default Search;
