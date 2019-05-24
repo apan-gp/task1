@@ -1,9 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default props => {
     return (
-        <button className="add-post-button">
-            Add post
-        </button>
+        <Link to="/posts/edit/">
+            <button className="add-post-button">
+                Add post
+            </button>
+        </Link>
     );
 };

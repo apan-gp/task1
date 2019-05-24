@@ -1,0 +1,19 @@
+.modal {
+  &__background {
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0,0.4);
+  }
+
+  &__content {
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: max-content;
+    background-color: #fefefe;
+  }
+}
