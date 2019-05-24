@@ -1,0 +1,16 @@
+.breadcrumbs {
+  padding: 0;
+  border: 0;
+}
+
+.breadcrumbs__link {
+  color: brown;
+  text-decoration: initial;
+
+  &:not(:last-child)::after {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    color: black;
+    content: ">";
+  }
+}
