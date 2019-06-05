@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
+import './index.scss';
 
 function Search(props) {
     const [timerId, setTimerId] = useState(null);

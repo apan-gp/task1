@@ -1,0 +1,14 @@
+.add-post-button {
+  margin: 0;
+  height: calc(8px + 6px + 2px + 2rem);
+  width: 80px;
+  max-width: 80px;
+  border: 0;
+  padding-left: 8px;
+  padding-right: 8px;
+  box-sizing: border-box;
+  background-color: lightskyblue;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+}

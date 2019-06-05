@@ -1,17 +1,24 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { matchPath, withRouter } from 'react-router';
 import BreadcrumbsView from 'BreadcrumbsView';
 
 function BreadcrumbsContainer(props) {
-    const { match, location, routes } = props;
+    const { matchParams, location, routes, store } = props;
+
+    const parts = useMemo(
+        () => {
+            return renderParts(routes, matchParams, location.pathname, store)
+        },
+        [location.pathname, matchParams]
+    );
 
     return (
-        <BreadcrumbsView {...props} parts={generateParts(routes, match, location.pathname)} />
+        <BreadcrumbsView {...props} parts={parts} />
     );
 }
 
-function generateParts(routes, match, pathname) {
+function renderParts(routes, matchParams, pathname, store) {
     const matchingSettings = {
         exact: true, // To not make '/' and '/posts/' equal.
         strict: false,
@@ -23,7 +30,7 @@ function generateParts(routes, match, pathname) {
                 const matchingResult = matchPath(pathname, matchingSettings);
                 return !!matchingResult;
             })
-        .breadcrumbs;
+        .generateBreadcrumbs(store, matchParams);
     return breadcrumbs;
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Header from 'Header';
-import AddPostPage from 'AddPostPage';
+import PostPage from 'PostPage';
 import PostsContainer from 'PostsContainer';
 import Footer from 'Footer';
 import config from 'config';
@@ -11,11 +11,12 @@ import './App.css';
 class App extends React.Component {
     constructor(props) {
         super(props);
-        this.listOfValsToState = ['posts', 'users'];
         this.state = {
             posts: [],
             users: [],
+            matchParams: {},
         };
+        this.listOfValsToState = Object.keys(this.state); // All (as for now).
         this.store = new Store();
 
         this.routes = [
@@ -23,29 +24,48 @@ class App extends React.Component {
                 path: '/',
                 exact: true,
                 render: () => <PostsContainer posts={this.state.posts} store={this.store} />,
-                breadcrumbs: [
-                    { path: '/', text: 'Main page' },
+                generateBreadcrumbs: () => [
+                    { text: 'Main page' },
                 ],
             },
             {
                 path: '/posts/edit/',
                 exact: true,
-                render: ({ match }) => <AddPostPage users={this.state.users} store={this.store}
-                                                    posts={this.state.posts} postId={null} />,
-                breadcrumbs: [
+                render: () => <PostPage users={this.state.users} store={this.store}
+                               posts={this.state.posts} postId={null} />,
+                generateBreadcrumbs: () => [
                     { path: '/', text: 'Main page' },
-                    { path: '/posts/edit/', text: 'Edit post' },
+                    { text: 'New post' },
                 ],
             },
             {
                 path: '/posts/edit/:id',
-                exact: false,
-                render: ({ match }) => <AddPostPage users={this.state.users} store={this.store}
+                exact: true,
+                render: ({ match }) => <PostPage users={this.state.users} store={this.store}
                                posts={this.state.posts} postId={match.params.id} />,
-                breadcrumbs: [
-                    { path: '/', text: 'Main page' },
-                    { path: '/posts/edit/', text: 'Edit post' },
-                ],
+                generateBreadcrumbs: (store, matchParams) => {
+                    const titleLength = 14;
+
+                    const breadcrumbs = [
+                        { path: '/', text: 'Main page' },
+                    ];
+                    // If 'id' is not provided, then it means that another component has not set it to store yet.
+                    if ('id' in matchParams) {
+                        const idAsNum = parseInt(matchParams.id);
+                        const post = store.get('posts').find(post => post.id === idAsNum);
+                        let breadcrumbText = '/post does not exist/';
+                        if (typeof post === 'undefined') {
+                            alert(`Cannot make breadcrumbs. Post does not exist (id: ${matchParams.id}).`);
+                        }
+                        else {
+                            const truncatedTitle = post['title'].substring(0, titleLength - 1);
+                            const threeDots = (post['title'].length <= titleLength ? '' : '...');
+                            breadcrumbText = `${truncatedTitle}${threeDots} (${post['id']})`;
+                        }
+                        breadcrumbs.push({ text: breadcrumbText });
+                    }
+                    return breadcrumbs;
+                },
             },
         ];
     }
@@ -72,15 +92,9 @@ class App extends React.Component {
         fetch(`${config['data-endpoint']}posts`)
             .then(response => response.json())
             .then(posts => {
-                let currPostIdx = 1;
-                const updatedPosts = posts.map(post => {
-                    post['comments'] = [
-                        { title: `Comm. title for ${currPostIdx} 0`, body: 'Sample comment body 0' },
-                        { title: `Comm. title for ${currPostIdx} 1`, body: 'Sample comment body 1' },
-                    ];
-                    post['id'] = currPostIdx;
-                    post['userId'] = currPostIdx % 3 + 1;
-                    ++currPostIdx;
+                let nextCommentId = 1;
+                const updatedPosts = posts.map((post, postIdx) => {
+                    nextCommentId = populateMissingValsOfPost(post, postIdx, nextCommentId);
                     return post;
                 });
                 this.store.set('posts', updatedPosts);
@@ -97,7 +111,7 @@ class App extends React.Component {
         return (
             <div className="app">
                 <Router>
-                    <Header title="Logo" routes={this.routes} />
+                    <Header title="Logo" routes={this.routes} store={this.store} matchParams={this.state.matchParams} />
                     <Switch>
                         {computeRoutesElements(this.routes)}
                     </Switch>
@@ -111,7 +125,18 @@ class App extends React.Component {
 function computeRoutesElements(routes) {
     return routes.map(route => {
         return <Route exact={route.exact} path={[route.path]} render={route.render}
-         key={`${route.path}${route.exact.toString()}`} /> });
+         key={`${route.path}${route.exact}`} /> });
+}
+
+/// @returns next comment ID
+function populateMissingValsOfPost(post, postIdx, nextCommentId) {
+    post['comments'] = [
+        { id: nextCommentId++, title: `Comm. title for ${postIdx}: #0`, body: 'Sample comment body 0' },
+        { id: nextCommentId++, title: `Comm. title for ${postIdx}: #1`, body: 'Sample comment body 1' },
+    ];
+    post['id'] = postIdx;
+    post['userId'] = postIdx % 3 + 1;
+    return nextCommentId;
 }
 
 export default App;

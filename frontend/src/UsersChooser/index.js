@@ -4,20 +4,22 @@ import './index.scss'
 
 function UsersChooser(props) {
     return (
-        <form className="users-chooser">
-            {generateUserRadios(props.uniqueName, props.users, props.changeHandler, props.defaultValue)}
-        </form>
+        <>
+            <label>Users</label>
+            <form className="users-chooser">
+                {renderUserRadios(props.uniqueName, props.users, props.changeHandler, props.defaultValue)}
+            </form>
+        </>
     );
 }
 
 /// @param users object: {string name, number id}
-function generateUserRadios(groupName, users, changeHandler, defaultValue) {
-    //return users.map(user => <option value={user.id} key={user.id}>{user.name}</option>);
+function renderUserRadios(groupName, users, changeHandler, defaultValue) {
     return users.map(user => (
         <span className="users-chooser__entry" key={user.id}>
-            <input type="radio" name={groupName} value={user.id} key={user.id} onChange={changeHandler}
-             checked={user.id === defaultValue}/>
-            {user.name}
+            <input type="radio" name={groupName} value={user.id} onChange={changeHandler}
+             checked={user.id === defaultValue} />
+                {user.name}
         </span>
     ));
 }

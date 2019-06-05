@@ -4,12 +4,13 @@ import BreadcrumbsContainer from 'BreadcrumbsContainer';
 import Logo from 'Logo';
 import './index.scss';
 
-function Header(props) {
+function Header({ matchParams, routes, store, title }) {
     return (
         <header id="header">
             <Logo imgSrc="https://upload.wikimedia.org/wikipedia/commons/0/03/Cm-logo-200x200.jpg" />
-            <h2>{props.title}</h2>
-            <BreadcrumbsContainer routes={props.routes} className="header__breadcrumbs" />
+            <h2>{title}</h2>
+            <BreadcrumbsContainer routes={routes} store={store} matchParams={matchParams}
+             className="header__breadcrumbs" />
         </header>
     );
 }

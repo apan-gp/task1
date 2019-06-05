@@ -4,6 +4,7 @@ import Search from 'Search';
 import AddPostButton from 'AddPostButton';
 import Store from 'Store';
 import PostItem from 'PostItem';
+import './index.scss';
 
 function PostsContainer(props) {
     const { posts, store } = props;

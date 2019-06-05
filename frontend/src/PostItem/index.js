@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import DeletePostButton from 'DeletePostButton';
+import './index.scss';
 
 function PostItem(props) {
     const { deleteHandler, postData } = props;
@@ -16,8 +17,7 @@ function PostItem(props) {
                 <Link to={`/posts/edit/${postData.id}`}>
                     <button className="post-item__button">Open</button>
                 </Link>
-                <DeletePostButton key={`DeletePostButton_${postData.id}`}
-                    className="post-item__button" deleteHandler={deleteHandler} postId={postData.id}
+                <DeletePostButton className="post-item__button" deleteHandler={deleteHandler} postId={postData.id}
                   />
             </div>
         </div>

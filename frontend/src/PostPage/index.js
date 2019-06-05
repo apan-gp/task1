@@ -4,38 +4,15 @@ import { Link, withRouter } from 'react-router-dom';
 import Comment from 'Comment';
 import Modal from 'Modal';
 import UsersChooser from 'UsersChooser';
-import Store from 'Store';
+import { addPostToStore, modifyPost, Store } from 'Store';
 import './index.scss';
 
-const POST_START_ID = 1;
-
-function AddPostPage(props) {
-    const { history, postId, posts, store, users } = props;
-
+function PostPage({ history, match, postId, posts, store, users }) {
     const [isError, setIsError] = useState(false);
     const [userId, setUserId] = useState(null);
-    const [title, setTitle] = useState('Title');
-    const [body, setBody] = useState('Body');
+    const [title, setTitle] = useState('');
+    const [body, setBody] = useState('');
     const [comments, setComments] = useState([]);
-
-    useEffect(
-        () => {
-            if (postId && 0 !== posts.length) { // Posts can be not obtained yet at the first render.
-                const postIdAsNum = parseInt(postId); // postId is from URL. So it is string.
-                const post = posts.find(post => post.id === postIdAsNum);
-                setTitle(post.title);
-                setBody(post.body);
-                setUserId(post.userId);
-                setComments(post.comments ? post.comments : []);
-
-                // Small error handling:
-                if (-1 === users.findIndex(user => user.id === post.userId)) {
-                    alert('Using user, which does not exist.');
-                }
-            }
-        },
-        [posts] // Posts can be updated later, when REST fetch requests gets data.
-    );
 
     const closeModal = useCallback(() => setIsError(false), [setIsError]);
 
@@ -54,26 +31,13 @@ function AddPostPage(props) {
                 return;
             }
 
-            const currPosts = Array.from(posts);
-
             if (postId) {
-                const postIdAsNum = parseInt(postId);
-                post['id'] = postIdAsNum;
-                const postIdx = currPosts.findIndex(post => post.id === postIdAsNum);
-                currPosts[postIdx] = post;
+                modifyPost(store, post, parseInt(postId));
             }
             else {
-                const postNextId = posts.reduce((prevNextId, currPost) => {
-                        let nextId = currPost.id + 1;
-                        return Math.max(prevNextId, nextId);
-                    },
-                    POST_START_ID
-                );
-                post['id'] = postNextId;
-                currPosts.push(post);
+                addPostToStore(store, post);
             }
 
-            store.set('posts', currPosts);
             history.push('/');
         },
         [history, title, body, userId, setIsError, postId, posts, store]
@@ -81,14 +45,39 @@ function AddPostPage(props) {
 
     const titleCallback = useCallback(event => setTitle(event.target.value), [setTitle]);
     const bodyCallback = useCallback(event => setBody(event.target.value), [setBody]);
-    console.log(comments);
+
+    useEffect(
+        () => {
+            store.set('matchParams', match.params);
+        },
+        []
+    );
+
+    useEffect(
+        () => {
+            if (postId && (0 !== posts.length)) { // Posts can be not obtained yet at the first render.
+                const postIdAsNum = parseInt(postId); // postId is from URL. So it is string.
+                const post = posts.find(post => post.id === postIdAsNum);
+                setTitle(post.title);
+                setBody(post.body);
+                setUserId(post.userId);
+                setComments(post.comments ? post.comments : []);
+
+                // Small error handling:
+                if (-1 === users.findIndex(user => user.id === post.userId)) {
+                    alert('Using user, which does not exist.');
+                }
+            }
+        },
+        [posts] // Posts can be updated later, when REST fetch requests gets data.
+    );
 
     return (
         <div className="add-post-page">
             <h4>Edit/Insert post</h4>
-            <input type="text" value={title} onChange={titleCallback} className="add-post-page__title-input" />
-            <textarea value={body} onChange={bodyCallback} className="add-post-page__body-input" />
-            <label>Users</label>
+            <input type="text" value={title} onChange={titleCallback} className="add-post-page__title-input"
+             placeholder="Title" />
+            <textarea value={body} onChange={bodyCallback} className="add-post-page__body-input" placeholder="Body" />
             <UsersChooser changeHandler={usersChangeHandler} users={users} uniqueName="usersOnAddPage"
              defaultValue={parseInt(userId)} />
             <div className="add-post-page__buttons">
@@ -123,7 +112,7 @@ function computeCommentKey(title, body) {
     return `${title}${body}`;
 }
 
-AddPostPage.propTypes = {
+PostPage.propTypes = {
     postId: PropTypes.string,
     posts: PropTypes.arrayOf(PropTypes.shape({
         body: PropTypes.string.isRequired,
@@ -142,4 +131,4 @@ AddPostPage.propTypes = {
     })).isRequired,
 };
 
-export default withRouter(AddPostPage);
+export default withRouter(PostPage);
