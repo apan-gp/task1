@@ -4,12 +4,12 @@ import './index.scss'
 
 function UsersChooser(props) {
     return (
-        <>
+        <div className={props.className}>
             <label>Users</label>
-            <form className="users-chooser">
+            <div className="users-chooser">
                 {renderUserRadios(props.uniqueName, props.users, props.changeHandler, props.defaultValue)}
-            </form>
-        </>
+            </div>
+        </div>
     );
 }
 
@@ -26,6 +26,7 @@ function renderUserRadios(groupName, users, changeHandler, defaultValue) {
 
 UsersChooser.propTypes = {
     changeHandler: PropTypes.func.isRequired, // function's param: event
+    className: PropTypes.string,
     defaultValue: PropTypes.number,
     users: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.number.isRequired,

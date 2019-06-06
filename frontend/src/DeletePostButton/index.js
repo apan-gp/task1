@@ -29,7 +29,7 @@ function DeletePostButton(props) {
         [deleteHandler, postId],
     );
 
-    const modalWindowElem = (isDisplayed
+    const renderModal = (isDisplayed
         ? <Modal key={postId}>
             <span>Are you sure you want to delete it?</span>
             <button onClick={commitButtonHandler}>I am sure</button>
@@ -40,7 +40,7 @@ function DeletePostButton(props) {
     return (
         <>
             <button className="post-item__button" onClick={deleteButtonHandler}>Delete</button>
-            {modalWindowElem}
+            {renderModal}
         </>
     );
 }

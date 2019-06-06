@@ -3,16 +3,17 @@
 class Store {
     constructor() {
         this.saveCallback = null;
+        this.store = {};
     }
 
     /// @param path string
     get(key) {
-        return JSON.parse(sessionStorage.getItem(key));
+        return this.store[key];
     }
 
     /// @param path string
     set(key, value) {
-        sessionStorage.setItem(key, JSON.stringify(value));
+        this.store[key] = value;
         if (this.saveCallback !== null) {
             this.saveCallback(key, value);
         }
@@ -41,6 +42,11 @@ function addPostToStore(store, post) {
     store.set('posts', postsToSave);
 }
 
+function deletePost(store, postId) {
+    const filteredPosts = store.get('posts').filter(post => post.id !== postId);
+    store.set('posts', filteredPosts);
+}
+
 /// @param postId number
 function modifyPost(store, postData, postId) {
     const posts = Array.from(store.get('posts'));
@@ -50,5 +56,5 @@ function modifyPost(store, postData, postId) {
     store.set('posts', posts);
 }
 
-export { addPostToStore, modifyPost, Store };
+export { addPostToStore, deletePost, modifyPost, Store };
 export default Store;

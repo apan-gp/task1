@@ -29,11 +29,11 @@
   height: calc(8px + 6px + 2px + 2rem);
   width: 80px;
   max-width: 80px;
-  box-sizing: border-box;
   background-color: lightskyblue;
   color: white;
   font-weight: bold;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .post-item__title {

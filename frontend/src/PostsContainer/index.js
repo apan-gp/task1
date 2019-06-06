@@ -2,7 +2,7 @@ import React, {useCallback, useMemo, useState} from 'react';
 import PropTypes from 'prop-types';
 import Search from 'Search';
 import AddPostButton from 'AddPostButton';
-import Store from 'Store';
+import { deletePost, Store } from 'Store';
 import PostItem from 'PostItem';
 import './index.scss';
 
@@ -29,8 +29,8 @@ function PostsContainer(props) {
     );
 
     const deleteHandler = useCallback(
-        id => deletePost(posts, store, id),
-        [posts, store]
+        id => deletePost(store, id),
+        [store]
     );
 
     return (
@@ -43,7 +43,7 @@ function PostsContainer(props) {
                 {(postsToDisplay.length === 0)
                     ? <h3>No posts</h3>
                     : postsToDisplay.map(post =>
-                        <PostItem postData={post} deleteHandler={deleteHandler} key={computeKeyForPost(post)} />
+                        <PostItem postData={post} deleteHandler={deleteHandler} key={post.id} />
                     )
                 }
             </main>
@@ -56,17 +56,6 @@ function filterPosts(posts, phrase) {
         return posts;
     }
     return posts.filter(elem => elem.title.includes(phrase) || elem.body.includes(phrase));
-}
-
-function deletePost(posts, store, postId) {
-    const filteredPosts = posts.filter(post => post.id !== postId);
-    store.set('posts', filteredPosts);
-}
-
-function computeKeyForPost(post) {
-    // This key generator code is added for case when user edits field of post. Because in such case ID is the same.
-    // In production enviromnemt, it would be better to use fast hash function.
-    return `${post.id}${post.body}${post.title}${post.userId}`;
 }
 
 PostsContainer.propTypes = {

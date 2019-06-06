@@ -2,14 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import BreadcrumbsContainer from 'BreadcrumbsContainer';
 import Logo from 'Logo';
+import config from 'config';
 import './index.scss';
 
 function Header({ matchParams, routes, store, title }) {
     return (
-        <header id="header">
-            <Logo imgSrc="https://upload.wikimedia.org/wikipedia/commons/0/03/Cm-logo-200x200.jpg" />
+        <header className="header">
+            <Logo imgSrc={config.logo} />
             <h2>{title}</h2>
-            <BreadcrumbsContainer routes={routes} store={store} matchParams={matchParams}
+            <BreadcrumbsContainer store={store} matchParams={matchParams}
              className="header__breadcrumbs" />
         </header>
     );
@@ -17,7 +18,6 @@ function Header({ matchParams, routes, store, title }) {
 
 Header.propTypes = {
     title: PropTypes.string.isRequired,
-    routes: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default Header;

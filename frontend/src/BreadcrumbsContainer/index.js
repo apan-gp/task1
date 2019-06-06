@@ -2,19 +2,20 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { matchPath, withRouter } from 'react-router';
 import BreadcrumbsView from 'BreadcrumbsView';
+import config from 'config';
 
 function BreadcrumbsContainer(props) {
-    const { matchParams, location, routes, store } = props;
+    const { className, matchParams, location, store } = props;
 
     const parts = useMemo(
         () => {
-            return renderParts(routes, matchParams, location.pathname, store)
+            return renderParts(config.breadcrumbs, matchParams, location.pathname, store)
         },
         [location.pathname, matchParams]
     );
 
     return (
-        <BreadcrumbsView {...props} parts={parts} />
+        <BreadcrumbsView className={className} parts={parts} />
     );
 }
 
@@ -35,7 +36,10 @@ function renderParts(routes, matchParams, pathname, store) {
 }
 
 BreadcrumbsContainer.propTypes = {
-    routes: PropTypes.arrayOf(PropTypes.object).isRequired,
+    className: PropTypes.string,
+    matchParams: PropTypes.object,
+    location: PropTypes.object.isRequired,
+    store: PropTypes.object.isRequired,
 };
 
 export default withRouter(BreadcrumbsContainer);

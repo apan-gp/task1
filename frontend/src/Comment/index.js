@@ -13,6 +13,7 @@ function Comment(props) {
 }
 
 Comment.propTypes = {
+    className: PropTypes.string,
     title: PropTypes.string.isRequired,
     body: PropTypes.string.isRequired,
 };

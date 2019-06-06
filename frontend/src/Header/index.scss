@@ -1,7 +1,6 @@
-#header {
+.header {
   width: 100%;
   height: 14rem;
-  box-sizing: border-box;
   display: flex;
   border: 1px solid black;
   margin-left: 0;
@@ -10,14 +9,15 @@
   position: relative; /* Only to make "position: absolute" possible. */
   justify-content: flex-start;
   align-items: center;
+  box-sizing: border-box;
 
   > * + h2 {
     margin-left: 2rem;
   }
-}
 
-.header__breadcrumbs {
-  position: absolute;
-  right: 0;
-  margin-right: 2rem;
+  &__breadcrumbs {
+    position: absolute;
+    right: 0;
+    margin-right: 2rem;
+  }
 }

@@ -25,6 +25,7 @@ function createParts(parts) {
 }
 
 BreadcrumbsView.propTypes = {
+    className: PropTypes.string,
     parts: PropTypes.arrayOf(
         PropTypes.shape({
             text: PropTypes.string.isRequired,

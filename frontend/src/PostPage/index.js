@@ -73,30 +73,31 @@ function PostPage({ history, match, postId, posts, store, users }) {
     );
 
     return (
-        <div className="add-post-page">
+        <div className="post-page">
             <h4>Edit/Insert post</h4>
-            <input type="text" value={title} onChange={titleCallback} className="add-post-page__title-input"
+            <input type="text" value={title} onChange={titleCallback} className="post-page__part post-page__title-input"
              placeholder="Title" />
-            <textarea value={body} onChange={bodyCallback} className="add-post-page__body-input" placeholder="Body" />
+            <textarea value={body} onChange={bodyCallback} className="post-page__part post-page__body-input"
+             placeholder="Body" />
             <UsersChooser changeHandler={usersChangeHandler} users={users} uniqueName="usersOnAddPage"
-             defaultValue={parseInt(userId)} />
-            <div className="add-post-page__buttons">
-                <button type="button" onClick={submitHandler} className="add-post-page__button">Save changes</button>
+             defaultValue={parseInt(userId)} className="post-page__part" />
+            <div className="post-page__part post-page__buttons">
+                <button type="button" onClick={submitHandler} className="post-page__button">Save changes</button>
                 <Link to="/">
-                    <button type="button" className="add-post-page__button">Cancel</button>
+                    <button type="button" className="post-page__button">Cancel</button>
                 </Link>
             </div>
-            <div>
+            <div className="post-page__part">
                 {
                     comments.map(comment =>
-                        <Comment className="add-post-page__comment" title={comment.title} body={comment.body}
-                         key={computeCommentKey(comment.title, comment.body)} />)
+                        <Comment className="post-page__comment" title={comment.title} body={comment.body}
+                         key={comment.id} />)
                 }
             </div>
             {isError
                 ? <Modal>
                     <p>Please correct fields</p>
-                    <button onClick={closeModal} className="add-post-page__button">Close</button>
+                    <button onClick={closeModal} className="post-page__button">Close</button>
                   </Modal>
                 : null
             }
@@ -106,10 +107,6 @@ function PostPage({ history, match, postId, posts, store, users }) {
 
 function isPostInputCorrect(post) {
     return post['body'] && post['title'] && post['userId'];
-}
-
-function computeCommentKey(title, body) {
-    return `${title}${body}`;
 }
 
 PostPage.propTypes = {
