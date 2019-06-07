@@ -4,7 +4,7 @@ import './index.scss';
 
 export default props => {
     return (
-        <Link to="/posts/edit/">
+        <Link to="/posts/add/">
             <button className="add-post-button">
                 Add post
             </button>

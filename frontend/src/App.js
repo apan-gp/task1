@@ -6,7 +6,7 @@ import PostsContainer from 'PostsContainer';
 import Footer from 'Footer';
 import config from 'config';
 import Store from 'Store';
-import './App.css';
+import './App.scss';
 
 class App extends React.Component {
     constructor(props) {
@@ -16,51 +16,18 @@ class App extends React.Component {
             users: [],
             matchParams: {},
         };
-        this.listOfValsToState = Object.keys(this.state); // All (as for now).
         this.store = new Store();
-
-        this.routes = [
-            {
-                path: '/',
-                exact: true,
-                render: () => <PostsContainer posts={this.state.posts} store={this.store} />,
-            },
-            {
-                path: '/posts/edit/',
-                exact: true,
-                render: () => <PostPage users={this.state.users} store={this.store}
-                               posts={this.state.posts} />,
-            },
-            {
-                path: '/posts/edit/:id',
-                exact: true,
-                render: ({ match }) => <PostPage users={this.state.users} store={this.store}
-                               posts={this.state.posts} postId={match.params.id} />,
-            },
-        ];
-    }
-
-    componentDidMount() {
         this.store.setSaveCallback((name, value) => {
-            if (this.listOfValsToState.includes(name)) {
+            if (name in this.state) {
                 const stateChange = {
                     [name]: value,
                 };
                 this.setState(stateChange);
             }
         });
+    }
 
-        // Getting previously saved data.
-        this.listOfValsToState.forEach(path => {
-            const prevData = this.store.get(path);
-            if (prevData) { // At start of session, there are is no data.
-                const stateChange = {
-                    [path]: this.store.get(path),
-                };
-                this.setState(stateChange);
-            }
-        });
-
+    componentDidMount() {
         fetch(`${config.dataEndpoint}posts`)
             .then(response => response.json())
             .then(posts => {
@@ -79,21 +46,28 @@ class App extends React.Component {
         return (
             <div className="app">
                 <Router>
-                    <Header title="Logo" routes={this.routes} store={this.store} matchParams={this.state.matchParams} />
+                    <Header title="Logo" routes={this.routes} store={this.store} className="app__section"
+                     matchParams={this.state.matchParams} />
                     <Switch>
-                        {computeRoutesElements(this.routes)}
+                        <Route exact={true} path='/' render={
+                            () => <PostsContainer posts={this.state.posts} store={this.store} className="app__section"
+                                  />
+                        } />
+                        <Route exact={true} path='/posts/add/' render={
+                            () => <PostPage users={this.state.users} store={this.store} posts={this.state.posts}
+                                   className="app__section" />
+                        } />
+                        <Route exact={true} path='/posts/edit/:id' render={
+                            ({ match }) => <PostPage users={this.state.users} store={this.store}
+                                            posts={this.state.posts} postId={match.params.id} className="app__section"
+                                           />
+                        } />
                     </Switch>
-                    <Footer />
+                    <Footer className='app__section' />
                 </Router>
             </div>
         );
     }
-}
-
-function computeRoutesElements(routes) {
-    return routes.map(route => {
-        return <Route exact={route.exact} path={[route.path]} render={route.render}
-         key={`${route.path}${route.exact}`} /> });
 }
 
 /// @returns next comment ID

@@ -5,9 +5,10 @@ import Comment from 'Comment';
 import Modal from 'Modal';
 import UsersChooser from 'UsersChooser';
 import { addPostToStore, modifyPost, Store } from 'Store';
+import classNames from 'classnames';
 import './index.scss';
 
-function PostPage({ history, match, postId, posts, store, users }) {
+function PostPage({ className, history, match, postId, posts, store, users }) {
     const [isError, setIsError] = useState(false);
     const [userId, setUserId] = useState(null);
     const [title, setTitle] = useState('');
@@ -73,13 +74,13 @@ function PostPage({ history, match, postId, posts, store, users }) {
     );
 
     return (
-        <div className="post-page">
+        <div className={classNames('post-page', className)}>
             <h4>Edit/Insert post</h4>
             <input type="text" value={title} onChange={titleCallback} className="post-page__part post-page__title-input"
              placeholder="Title" />
             <textarea value={body} onChange={bodyCallback} className="post-page__part post-page__body-input"
              placeholder="Body" />
-            <UsersChooser changeHandler={usersChangeHandler} users={users} uniqueName="usersOnAddPage"
+            <UsersChooser changeHandler={usersChangeHandler} users={users} formName="usersOnAddPage"
              defaultValue={parseInt(userId)} className="post-page__part" />
             <div className="post-page__part post-page__buttons">
                 <button type="button" onClick={submitHandler} className="post-page__button">Save changes</button>
@@ -110,6 +111,7 @@ function isPostInputCorrect(post) {
 }
 
 PostPage.propTypes = {
+    className: PropTypes.string,
     postId: PropTypes.string,
     posts: PropTypes.arrayOf(PropTypes.shape({
         body: PropTypes.string.isRequired,

@@ -14,7 +14,7 @@ export default {
             ],
         },
         {
-            path: '/posts/edit/',
+            path: '/posts/add/',
             generateBreadcrumbs: () => [
                 { path: '/', text: 'Main page' },
                 { text: 'New post' },

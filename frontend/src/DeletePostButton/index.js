@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'Modal';
+import './index.scss';
 
 function DeletePostButton(props) {
     const { deleteHandler, postId } = props;
@@ -29,18 +30,16 @@ function DeletePostButton(props) {
         [deleteHandler, postId],
     );
 
-    const renderModal = (isDisplayed
-        ? <Modal key={postId}>
+    const renderModal = () => (<Modal key={postId}>
             <span>Are you sure you want to delete it?</span>
-            <button onClick={commitButtonHandler}>I am sure</button>
-            <button onClick={cancelButtonHandler}>Cancel</button>
-        </Modal>
-        : null);
+            <button className="delete-post-button__modal-button" onClick={commitButtonHandler}>I am sure</button>
+            <button className="delete-post-button__modal-button" onClick={cancelButtonHandler}>Cancel</button>
+        </Modal>);
 
     return (
         <>
             <button className="post-item__button" onClick={deleteButtonHandler}>Delete</button>
-            {renderModal}
+            { isDisplayed ? renderModal() : null}
         </>
     );
 }

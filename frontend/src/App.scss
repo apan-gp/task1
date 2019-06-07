@@ -13,9 +13,9 @@ body {
   margin-right: auto;
   display: flex;
   flex-direction: column;
-}
 
-.app>* {
-  /* Including footer - it looks better with margin. */
-  margin-bottom: 20px;
+  &__section {
+    /* Including footer - it looks better with margin. */
+    margin-bottom: 20px;
+  }
 }

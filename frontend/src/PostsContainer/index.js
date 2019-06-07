@@ -4,10 +4,11 @@ import Search from 'Search';
 import AddPostButton from 'AddPostButton';
 import { deletePost, Store } from 'Store';
 import PostItem from 'PostItem';
+import classNames from 'classnames';
 import './index.scss';
 
 function PostsContainer(props) {
-    const { posts, store } = props;
+    const { className, posts, store } = props;
 
     // Needed for optimization, when phrase is same as old.
     const [searchPhrase, setSearchPhrase] = useState('');
@@ -39,7 +40,7 @@ function PostsContainer(props) {
                 <Search requestHandler={searchCallback} />
                 <AddPostButton />
             </div>
-            <main className="posts-container__posts">
+            <main className={classNames('posts-container__posts', className)}>
                 {(postsToDisplay.length === 0)
                     ? <h3>No posts</h3>
                     : postsToDisplay.map(post =>

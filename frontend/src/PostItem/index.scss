@@ -1,52 +1,52 @@
 .post-item {
   display: flex;
   justify-content: space-between;
-  height: calc(2 * (8px + 6px + 2px + 2rem) + 1rem);
+  /* 2 * two buttons + (to make it looking lice) 1rem */
+  height: calc(2 * 3rem + 1rem);
   margin: 0;
   padding: 1rem;
   border: 1px solid black;
-  /* 2 * two buttons + (to make it looking lice) 1rem */
-}
 
-.post-item__actions {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border: 0;
-  padding: 0;
-  margin-left: 1em;
-  margin-top: 0;
-  margin-bottom: 0;
-  margin-right: 0;
-  box-sizing: border-box;
-}
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 0;
+    padding: 0;
+    margin-left: 1em;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-right: 0;
+    box-sizing: border-box;
+  }
 
-.post-item__button {
-  border: 0;
-  margin: 0;
-  padding-left: 8px;
-  padding-right: 8px;
-  height: calc(8px + 6px + 2px + 2rem);
-  width: 80px;
-  max-width: 80px;
-  background-color: lightskyblue;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  box-sizing: border-box;
-}
+  &__button {
+    border: 0;
+    margin: 0;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    height: 3rem;
+    width: 4rem;
+    max-width: 80px;
+    background-color: lightskyblue;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
 
-.post-item__title {
-  padding: 0;
-  margin-top: 0;
-  margin-left: 0;
-  margin-right: 0;
-  margin-bottom: 1rem;
-}
+  &__title {
+    padding: 0;
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
 
-.post-item__paragraph {
-  padding: 0;
-  margin: 0;
-  text-indent: 1.5rem;
-  text-overflow: ellipsis;
+  &__paragraph {
+    padding: 0;
+    margin: 0;
+    text-indent: 1.5rem;
+    text-overflow: ellipsis;
+  }
 }
