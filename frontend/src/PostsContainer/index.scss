@@ -1,0 +1,16 @@
+.posts-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.posts-container__menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.posts-container__posts>*:not(:last-child){
+  margin-bottom: 15px;
+}
