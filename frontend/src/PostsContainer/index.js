@@ -2,16 +2,20 @@ import React, {useCallback, useMemo, useState} from 'react';
 import PropTypes from 'prop-types';
 import Search from 'Search';
 import AddPostButton from 'AddPostButton';
-import { deletePost, Store } from 'Store';
+import { useDispatch, useSelector } from 'react-redux';
+import { deletePostRequest } from 'actionCreators';
 import PostItem from 'PostItem';
 import classNames from 'classnames';
 import './index.scss';
 
 function PostsContainer(props) {
-    const { className, posts, store } = props;
+    const { className } = props;
 
     // Needed for optimization, when phrase is same as old.
     const [searchPhrase, setSearchPhrase] = useState('');
+
+    const posts = useSelector(state => state.posts);
+    const dispatch = useDispatch();
 
     const postsToDisplay = useMemo(
         () => filterPosts(posts, searchPhrase),
@@ -30,8 +34,8 @@ function PostsContainer(props) {
     );
 
     const deleteHandler = useCallback(
-        id => deletePost(store, id),
-        [store]
+        id => dispatch(deletePostRequest(id)),
+        []
     );
 
     return (
@@ -60,13 +64,6 @@ function filterPosts(posts, phrase) {
 }
 
 PostsContainer.propTypes = {
-    store: PropTypes.instanceOf(Store).isRequired,
-    posts: PropTypes.arrayOf(PropTypes.shape({
-        body: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-        id: PropTypes.number.isRequired,
-    })).isRequired,
-
 };
 
 export default PostsContainer;
