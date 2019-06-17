@@ -8,14 +8,12 @@ body {
 }
 
 .app {
-  max-width: 996px;
-  margin-left: auto;
-  margin-right: auto;
   display: flex;
   flex-direction: column;
+  max-width: 996px;
+  margin: 0 auto 0 auto;
 
   &__section {
-    /* Including footer - it looks better with margin. */
     margin-bottom: 20px;
   }
 }

@@ -20,12 +20,11 @@
   }
 
   &__button {
-    border: 0;
-    margin-right: 0.5rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
     height: 3rem;
     width: 15rem;
+    border: 0;
+    margin-right: 0.5rem;
+    padding: 0 .5rem 0 .5rem;
     background-color: lightskyblue;
     color: white;
     font-weight: bold;
