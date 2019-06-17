@@ -5,28 +5,24 @@ import PostPage from 'PostPage';
 import PostsContainer from 'PostsContainer';
 import Footer from 'Footer';
 import config from 'config';
-import Store from 'Store';
+import { createStore } from 'redux'
+import { Provider } from 'react-redux';
+import rootReducer from 'reducers';
+import { setPostsRequest } from 'actionCreators';
 import './App.scss';
 
-class App extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            posts: [],
-            users: [],
-            matchParams: {},
-        };
-        this.store = new Store();
-        this.store.setSaveCallback((name, value) => {
-            if (name in this.state) {
-                const stateChange = {
-                    [name]: value,
-                };
-                this.setState(stateChange);
-            }
-        });
-    }
+const initialVals = {
+    errors: [],
+    posts: [],
+    users: config.users,
+    matchParams: {},
+}
 
+const store = createStore(rootReducer, initialVals,
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() // for debug
+);
+
+class App extends React.Component {
     componentDidMount() {
         fetch(`${config.dataEndpoint}posts`)
             .then(response => response.json())
@@ -36,34 +32,29 @@ class App extends React.Component {
                     nextCommentId = populateMissingValsOfPost(post, postIdx, nextCommentId);
                     return post;
                 });
-                this.store.set('posts', updatedPosts);
+                store.dispatch(setPostsRequest(updatedPosts));
             });
-
-        this.store.set('users', config.users);
     }
 
     render() {
         return (
             <div className="app">
                 <Router>
-                    <Header title="Logo" routes={this.routes} store={this.store} className="app__section"
-                     matchParams={this.state.matchParams} />
-                    <Switch>
-                        <Route exact={true} path='/' render={
-                            () => <PostsContainer posts={this.state.posts} store={this.store} className="app__section"
-                                  />
-                        } />
-                        <Route exact={true} path='/posts/add/' render={
-                            () => <PostPage users={this.state.users} store={this.store} posts={this.state.posts}
-                                   className="app__section" />
-                        } />
-                        <Route exact={true} path='/posts/edit/:id' render={
-                            ({ match }) => <PostPage users={this.state.users} store={this.store}
-                                            posts={this.state.posts} postId={match.params.id} className="app__section"
-                                           />
-                        } />
-                    </Switch>
-                    <Footer className='app__section' />
+                    <Provider store={store}>
+                        <Header title="Logo" className="app__section" />
+                        <Switch>
+                            <Route exact={true} path='/' render={
+                                () => <PostsContainer className="app__section" />
+                            } />
+                            <Route exact={true} path='/posts/add/' render={
+                                () => <PostPage className="app__section" />
+                            } />
+                            <Route exact={true} path='/posts/edit/:id' render={
+                                ({ match }) => <PostPage postId={match.params.id} className="app__section" />
+                            } />
+                        </Switch>
+                        <Footer className='app__section' />
+                    </Provider>
                 </Router>
             </div>
         );
@@ -76,7 +67,6 @@ function populateMissingValsOfPost(post, postIdx, nextCommentId) {
         { id: nextCommentId++, title: `Comm. title for ${postIdx}: #0`, body: 'Sample comment body 0' },
         { id: nextCommentId++, title: `Comm. title for ${postIdx}: #1`, body: 'Sample comment body 1' },
     ];
-    post['id'] = postIdx;
     post['userId'] = postIdx % 3 + 1;
     return nextCommentId;
 }

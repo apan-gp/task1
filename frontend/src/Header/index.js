@@ -6,18 +6,18 @@ import classNames from 'classnames';
 import config from 'config';
 import './index.scss';
 
-function Header({ className, matchParams, store, title }) {
+function Header({ className, title }) {
     return (
         <header className={classNames('header', className)}>
             <Logo imgSrc={config.logo} />
             <h2>{title}</h2>
-            <BreadcrumbsContainer store={store} matchParams={matchParams}
-             className="header__breadcrumbs" />
+            <BreadcrumbsContainer className="header__breadcrumbs" />
         </header>
     );
 }
 
 Header.propTypes = {
+    className: PropTypes.string,
     title: PropTypes.string.isRequired,
 };
 

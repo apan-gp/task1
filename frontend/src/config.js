@@ -22,7 +22,8 @@ export default {
         },
         {
             path: '/posts/edit/:id',
-            generateBreadcrumbs: (store, matchParams) => {
+            dataSelector: state => state.posts,
+            generateBreadcrumbs: (posts, matchParams) => {
                 const titleLength = 14;
 
                 const breadcrumbs = [
@@ -31,10 +32,13 @@ export default {
                 // If 'id' is not provided, then it means that another component has not set it to store yet.
                 if ('id' in matchParams) {
                     const idAsNum = parseInt(matchParams.id);
-                    const post = store.get('posts').find(post => post.id === idAsNum);
+                    const post = posts.find(post => post.id === idAsNum);
                     let breadcrumbText = '/post does not exist/';
                     if (typeof post === 'undefined') {
-                        alert(`Cannot make breadcrumbs. Post does not exist (id: ${matchParams.id}).`);
+                        if (posts.length !== 0) {
+                            // If post is not provided, and array is empty, it means that posts' data wasn't populated.
+                            alert(`Cannot make breadcrumbs. Post does not exist (id: ${matchParams.id}).`);
+                        }
                     }
                     else {
                         const truncatedTitle = post['title'].substring(0, titleLength - 1);

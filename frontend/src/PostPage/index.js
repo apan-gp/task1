@@ -4,16 +4,21 @@ import { Link, withRouter } from 'react-router-dom';
 import Comment from 'Comment';
 import Modal from 'Modal';
 import UsersChooser from 'UsersChooser';
-import { addPostToStore, modifyPost, Store } from 'Store';
+import { useDispatch, useSelector } from 'react-redux';
+import { addPostRequest, modifyPostRequest, setMatchParamsRequest } from 'actionCreators';
 import classNames from 'classnames';
 import './index.scss';
 
-function PostPage({ className, history, match, postId, posts, store, users }) {
+function PostPage({ className, history, match, postId }) {
     const [isError, setIsError] = useState(false);
     const [userId, setUserId] = useState(null);
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
     const [comments, setComments] = useState([]);
+
+    const posts = useSelector(state => state.posts);
+    const users = useSelector(state => state.users);
+    const dispatch = useDispatch();
 
     const closeModal = useCallback(() => setIsError(false), [setIsError]);
 
@@ -26,31 +31,26 @@ function PostPage({ className, history, match, postId, posts, store, users }) {
 
     const submitHandler = useCallback(
         () => {
-            let post = { title, body, userId, comments };
+            const post = { title, body, userId, comments };
             if (!isPostInputCorrect(post)) {
                 setIsError(true);
                 return;
             }
 
-            if (postId) {
-                modifyPost(store, post, parseInt(postId));
-            }
-            else {
-                addPostToStore(store, post);
-            }
+            const actionToDispatch = (postId ? modifyPostRequest(post, parseInt(postId)) : addPostRequest(post));
+
+            dispatch(actionToDispatch);
 
             history.push('/');
         },
-        [history, title, body, userId, setIsError, postId, posts, store]
+        [history, title, body, userId, setIsError, postId, posts]
     );
 
     const titleCallback = useCallback(event => setTitle(event.target.value), [setTitle]);
     const bodyCallback = useCallback(event => setBody(event.target.value), [setBody]);
 
     useEffect(
-        () => {
-            store.set('matchParams', match.params);
-        },
+        () => dispatch(setMatchParamsRequest(match.params)),
         []
     );
 
@@ -113,21 +113,6 @@ function isPostInputCorrect(post) {
 PostPage.propTypes = {
     className: PropTypes.string,
     postId: PropTypes.string,
-    posts: PropTypes.arrayOf(PropTypes.shape({
-        body: PropTypes.string.isRequired,
-        comments: PropTypes.arrayOf(PropTypes.shape({
-            title: PropTypes.string.isRequired,
-            body: PropTypes.string.isRequired,
-        })),
-        title: PropTypes.string.isRequired,
-        id: PropTypes.number.isRequired,
-        userId: PropTypes.number.isRequired,
-    })).isRequired,
-    store: PropTypes.instanceOf(Store).isRequired,
-    users: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        name: PropTypes.string.isRequired,
-    })).isRequired,
 };
 
 export default withRouter(PostPage);
